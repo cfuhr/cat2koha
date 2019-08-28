@@ -24,7 +24,7 @@ Ss un script bash que funciona sobre plataforma ***Linux***.
 >
 >  ***Sintaxis:***
 >
->  *./cat2koha.sh [-b | --origen] <DB_origen> [-f | --from] <Nro. MFN inicial> [-t | --to] <Nro. MFN final>*
+>  *./cat2koha.sh [-b | --db] <DB_origen> [-f | --from] <Nro. MFN inicial> [-t | --to] <Nro. MFN final>*
 >
 >  Parámetros:
 >
