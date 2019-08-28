@@ -145,8 +145,12 @@ if [ "${DB_SOURCE}" = "" ]; then
   exit 1
 fi
 
+# Cantidad de registros de la BD a procesar
+NEXT_MFN_DB_IN=`mx ${DB_SOURCE} +control count=-1 | tail -n 1 | tr -s '   ' | tr ' ' '\n' | head -n 2 | tail -n 1`;
+LAST_MFN_DB_IN=`echo ${NEXT_MFN_DB_IN} - 1 | bc -l`;
+
 if [ "${FROM_}" = "" ]; then
-  FROM_='';
+  FROM_='1';
 elif [ "${FROM_}" -lt "0" ]; then
   # FROM_ menor que 0.
   echo "El valor ingrasado para FROM_ debe ser mayor que 0."
@@ -154,11 +158,10 @@ elif [ "${FROM_}" -lt "0" ]; then
 elif  [ "${FROM_}" -gt "0" ]; then
   # FROM_ mayor que 0.
   FROM_MX='from='${FROM_};
-  #i=${FROM_};
 fi
 
 if [ "${TO_}" = "" ]; then
-  TO_='';
+  TO_=${LAST_MFN_DB_IN};
 elif [ "${TO_}" -lt "0" ]; then
   # TO_ menor que 0.
   echo "El valor ingrasado para TO_ debe ser mayor que 0."
@@ -170,7 +173,6 @@ elif [ "${TO_}" -lt "${FROM_}" ]; then
 elif [ "${TO_}" -gt "0" ]; then
   # TO_ mayor que 0.
   TO_MX='to='${TO_};
-  #NUM_REG=${TO_};
 fi
 
 ## Punto de control de parámetros ingresados
@@ -230,14 +232,10 @@ echo "Conversión de ISIS a ISO para eliminar registros borrados lógicamente"
 # Convertimos la BD a formato ISO para quitar registros con borrado lógico
 mx ${WORK_FOLDER}/${DB_NAME}_tmp iso=${WORK_FOLDER}/${DB_NAME}_tmp.iso now -all tell=200
 echo "Conversión de ISO a ISIS"
-mx iso=${WORK_FOLDER}/${DB_NAME}_tmp.iso create=${WORK_FOLDER}/${DB_NAME}_tmp_iso now -all tell=200
+mx iso=${WORK_FOLDER}/${DB_NAME}_tmp.iso create=${WORK_FOLDER}/${DB_NAME}_2koha now -all tell=200
 
 # Copiamos base isis a directorio de exportación
-mx ${WORK_FOLDER}/${DB_NAME}_tmp_iso create=${WORK_FOLDER}/${DB_NAME}_2koha now -all tell=200
-
-# Cantidad de registros procesados
-NEXT_MFN=`mx ${WORK_FOLDER}/${DB_NAME}_2koha +control count=-1 | tail -n 1 | tr -s '   ' | tr ' ' '\n' | head -n 2 | tail -n 1`;
-LAST_MFN=`echo ${NEXT_MFN} - 1 | bc -l`;
+#mx ${WORK_FOLDER}/${DB_NAME}_tmp_iso create=${WORK_FOLDER}/${DB_NAME}_2koha now -all tell=200
 
 echo "Conversión a formato MRK"
 # Relizamos el proceso de conversión a formato MRK
@@ -260,12 +258,20 @@ sed -i 's/=999/=LDR/g' $WORK_FOLDER/${DB_NAME}_2koha.mrk
 
 echo "Conversión a formato MRC"
 # Realizamos el proceso de conversión a formato MRC
-python cat2mkr/marc/MarcMaker.py < ${WORK_FOLDER}/${DB_NAME}_2koha.mrk > ${TARGET_FOLDER}/${DB_NAME}_${DATE}.mrc
+python mrk2mrc/MarcMaker.py < ${WORK_FOLDER}/${DB_NAME}_2koha.mrk > ${TARGET_FOLDER}/${DB_NAME}_${DATE}_${FROM_}-${TO_}.mrc
+
+# Cantidad de registros de la BD a procesados
+NEXT_MFN_DB_OUT=`mx ${WORK_FOLDER}/${DB_NAME}_2koha +control count=-1 | tail -n 1 | tr -s '   ' | tr ' ' '\n' | head -n 2 | tail -n 1`;
+LAST_MFN_DB_OUT=`echo ${NEXT_MFN_DB_OUT} - 1 | bc -l`;
 
 echo
-echo "Total de registros procesados: ${LAST_MFN}"
+echo "Total de registros procesados: ${LAST_MFN_DB_OUT}"
 echo
-echo "Resultado de la conversión ./${TARGET_FOLDER}/${DB_NAME}_${DATE}.mrc"
+echo "Resultado de la conversión ./${TARGET_FOLDER}/${DB_NAME}_${DATE}_${FROM_}-${TO_}.mrc"
+echo
+echo "Aclaración: Si existe alguna diferencia en tre la cantidad de registros procesados"
+echo "y el nro. de mfn final es porque existieron registros borrados logicamente"
+echo "y en la conversión a ISO desaparecieron."
 echo
 echo "Proceso finalizado."
 echo
