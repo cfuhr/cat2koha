@@ -8,8 +8,7 @@
 #
 #  Marzo 2016
 #
-#  MIT License
-#  Please read COPYRIGHT file
+#  GNU General Public License v3.0
 #
 #  Este script elimina campos locales de Catalis no necesarios en KOHA.
 #  Se incorpora el campo 942 donde se especifica el tipo de item:
