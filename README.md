@@ -14,7 +14,7 @@ Ss un script bash que funciona sobre plataforma ***Linux***.
     > Se recomienda crear en /opt la carpeta cisis (/opt/cisis) y allí copiar los utilitarios descargados y otorgarles permisos de ejecución.
     Si ud. desea alojar estos utiliarios en otro directorio, debe modificar la variable PATH_CISIS='/opt/cisis' que se encuentra en cat2koha.sh. 
  
-- Algunos conocimientos de [*Lenguaje de formteo de CISIS*](<http://modelo.bvsalud.org/download/cisis/CISIS-LinguagemFormato4-es.pdf>).
+- Algunos conocimientos de [*Lenguaje de formateo de CISIS*](<http://modelo.bvsalud.org/download/cisis/CISIS-LinguagemFormato4-es.pdf>).
 - Interprete **Python**.
 - Se recomienda la aplicación [**MarcEdit**](<https://marcedit.reeset.net/>) para validar el archivo resultante para verificar que la estructura Marc sea válida y no haya errores en la codificación, por ej. indicadores inválidos.
 
