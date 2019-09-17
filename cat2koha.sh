@@ -268,7 +268,7 @@ echo "Total de registros procesados: ${LAST_MFN_DB_OUT}"
 echo
 echo "Resultado de la conversión ./${TARGET_FOLDER}/${DB_NAME}_${DATE}_${FROM_}-${TO_}.mrc"
 echo
-echo "Aclaración: Si existe alguna diferencia en tre la cantidad de registros procesados"
+echo "Aclaración: Si existe alguna diferencia entre la cantidad de registros procesados"
 echo "y el nro. de mfn final es porque existieron registros borrados logicamente"
 echo "y en la conversión a ISO desaparecieron."
 echo
